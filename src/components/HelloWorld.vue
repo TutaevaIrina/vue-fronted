@@ -1,12 +1,13 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+      <img src="../assets/pattern11.jpg" class="fixed-size-image" alt="Image">
       <div>
-          <input v-model="nameField" placeholder="Name" type="text" ref="nameInput">
-          <input v-model="descriptionField" placeholder="Description" @keyup.enter="save()">
+          <input v-model="nameField" placeholder="Enter title" type="text" ref="nameInput">
+          <input v-model="descriptionField" placeholder="Enter description" @keyup.enter="save()">
           <input v-model="deadlineField" placeholder="Select date" type="text" ref="deadlineInput">
-          <button type="button" @click="save()">Save</button>
-          <input v-model="filterCrit" placeholder="filter criterion">
+          <br>
+          <button type="button" @click="save()">Add</button>
+
       </div>
       <h3>Installed CLI Plugins</h3>
       <ul>
@@ -117,6 +118,24 @@ li {
     margin: 0 10px;
 }
 a {
-    color: #42b983;
+    color2: #001442;
 }
+div {
+    padding: 50px 0;
+}
+input{
+    margin-right: 25px;
+    width:400px;
+    color: #00144A;
+}
+button{
+    margin-top: 50px;
+    width:150px;
+    color: #EBF8FF;
+    background: #1B90FF;
+    border-radius: 40px 40px 40px 40px / 200% 200%;
+
+}
+
+
 </style>
