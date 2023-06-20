@@ -4,7 +4,7 @@
       <div>
           <input v-model="nameField" placeholder="Name" type="text" ref="nameInput">
           <input v-model="descriptionField" placeholder="Description" @keyup.enter="save()">
-          <input v-model="deadlineField" placeholder="Date" type="text" ref="deadlineInput">
+          <input v-model="deadlineField" placeholder="Select date" type="text" ref="deadlineInput">
           <button type="button" @click="save()">Save</button>
           <input v-model="filterCrit" placeholder="filter criterion">
       </div>
@@ -35,11 +35,28 @@
 </template>
 
 <script>
+import "flatpickr/dist/flatpickr.css";
+import flatpickr from "flatpickr";
+
 export default {
     name: 'HelloWorld',
     props: {
         msg: String
     },
+    data() {
+        return {
+            nameField: '',
+            descriptionField: '',
+            deadlineField: '',
+            filterCrit: ''
+        }
+    },
+    mounted() {
+        flatpickr(this.$refs.deadlineInput, {
+            minDate: "today"
+        });
+    },
+
     methods: {
         loadTasks() {
             const endpoint = 'http://localhost:8080/tasks'
@@ -78,9 +95,13 @@ export default {
                 })
                 .catch(error => console.log('error', error))
         }
+
+
     }
 }
+
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
