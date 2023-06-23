@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="addTask">
     <img alt="logo" src="../assets/logoStudious2.png">
     <HelloWorld msg="Hello World!"/>
   </div>
@@ -18,5 +18,8 @@ export default {
 </script>
 
 <style scoped>
+img{
+    padding-bottom: 50px;
+}
 
 </style>
