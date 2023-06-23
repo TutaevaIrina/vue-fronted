@@ -33,7 +33,7 @@
                     <td><input type="checkbox"></td>
                     <td>{{ task.name }}</td>
                     <td>{{ task.description }}</td>
-                    <td>{{ task.deadline }}</td>
+                    <td>{{ formatDate(task.deadline) }}</td>
                     <td>{{ task.status }}</td>
                     <td><button @click="deleteTask">Delete</button></td>
                 </tr>
@@ -127,6 +127,14 @@ export default {
                     console.log('Success:', data)
                 })
                 .catch(error => console.log('error', error))
+        },
+        formatDate(date) {
+            const options = {
+                day: 'numeric',
+                month: 'numeric',
+                year: 'numeric',
+            };
+            return new Date(date).toLocaleDateString('en-GB', options);
         },
         submitForm() {
             let name = this.nameField.trim();
