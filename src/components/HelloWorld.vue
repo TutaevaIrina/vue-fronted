@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <div :style="myStyle" id="container" >
         <div class="addTask">
             <input v-model="nameField" placeholder="Enter title" type="text" ref="nameInput">
             <input v-model="descriptionField" placeholder="Enter description" @keyup.enter="save()">
@@ -17,14 +18,18 @@
             </select>
         </div>
         <div class="todoTable">
+            <div class = "row">
+            <h1> List of tasks</h1>
+            </div>
             <table class="table">
                 <thead>
                 <tr>
                     <th></th>
-                    <th>Task</th>
-                    <th>Description</th>
-                    <th>Deadline</th>
-                    <th>Status</th>
+                    <th id="Task">Task</th>
+                    <th id="Description">Description</th>
+                    <th id="Deadline">Deadline</th>
+                    <th id="Status">Status</th>
+                    <th id="Action">Action</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -35,34 +40,13 @@
                     <td>{{ task.description }}</td>
                     <td>{{ formatDate(task.deadline) }}</td>
                     <td>{{ task.status }}</td>
+                    <td>{{ task.action }}</td>
                     <td><button @click="deleteTask">Delete</button></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <h3>Installed CLI Plugins</h3>
-        <ul>
-            <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-            <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-            <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-            <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-jest" target="_blank" rel="noopener">unit-jest</a></li>
-        </ul>
-        <h3>Essential Links</h3>
-        <ul>
-            <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-            <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-            <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-            <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-            <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-        </ul>
-        <h3>Ecosystem</h3>
-        <ul>
-            <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-            <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-            <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-            <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-            <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-        </ul>
+    </div>
     </div>
 </template>
 
@@ -78,6 +62,7 @@ export default {
     },
     data() {
         return {
+            myStyle:{color:"#00144A"},
             tasks: [],
             nameField: '',
             descriptionField: '',
@@ -164,20 +149,8 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-    margin: 40px 0 0;
-}
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-li {
-    display: inline-block;
-    margin: 0 10px;
-}
-a {
-    color2: #001442;
-}
+
+
 
 input{
     margin-right: 25px;
@@ -185,10 +158,11 @@ input{
     color: #00144A;
 }
 button{
-    width:50px;
+    width:150px;
     color: #EBF8FF;
     background: #1B90FF;
     border-radius: 40px 40px 40px 40px / 200% 200%;
+    margin-right: 50px;
 }
 .addTask {
     display: flex;
@@ -199,13 +173,21 @@ button{
 .container {
     max-width: 100%;
     max-height: 100%;
+    color: #00144A;
 }
 .todoTable {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     margin-top: 50px;
+    width: 100%;
 }
+.todoTable th#Task { width: 10%; }
+.todoTable th#Description { width: 50%; }
+.todoTable th#Deadline { width: 10%; }
+.todoTable th#Status { width: 10%; }
+.todoTable th#Action { width: 10%; }
+
 
 .filter {
     float: right;
@@ -220,6 +202,11 @@ button{
 }
 .errorText{
     color: red;
+}
+.row{
+    color: white;
+    text-align:center;
+    margin-right: 600px;
 }
 
 </style>
