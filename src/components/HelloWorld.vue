@@ -1,14 +1,19 @@
 <template>
     <div class="container">
-        <div :style="myStyle" id="container" >
         <div class="addTask">
             <input v-model="nameField" placeholder="Enter title" type="text" ref="nameInput">
-            <input v-model="descriptionField" placeholder="Enter description" @keyup.enter="save()">
+            <input v-model="descriptionField" placeholder="Enter description" ref="descriptionInput">
             <input v-model="deadlineField" placeholder="Select date" type="text" ref="deadlineInput">
-            <button type="button" @click="submitForm">+</button>
+            <button type="button" @click="submitForm">
+                <font-awesome-icon icon="circle-plus" size="3x" class="circle-plus-icon" />
+            </button>
+
         </div>
         <div>
             <div class = "errorText"></div>
+        </div>
+        <div>
+            <h3 class = "h_yourTasks">Your tasks</h3>
         </div>
         <div class="filter">
             <select class="todoOptions">
@@ -19,18 +24,16 @@
         </div>
         <div class="todoTable">
             <div class = "row">
-            <h1> List of tasks</h1>
             </div>
             <table class="table">
                 <thead>
                 <tr>
-                    <th></th>
-                    <th id="Task">Task</th>
-                    <th id="Description">Description</th>
-                    <th id="Deadline">Deadline</th>
-                    <th id="Status">Status</th>
-                    <th id="Action">Action</th>
-                    <th></th>
+                    <th class ="column_checkbox"></th>
+                    <th class ="column_task">Task</th>
+                    <th class ="column_description">Description</th>
+                    <th class ="column_deadline">Deadline</th>
+                    <th class ="column_status">Status</th>
+                    <th class ="column_action"></th>
                 </tr>
                 </thead>
                 <tbody class="tasks" data-todo-option="active">
@@ -40,29 +43,44 @@
                     <td>{{ task.description }}</td>
                     <td>{{ formatDate(task.deadline) }}</td>
                     <td>{{ task.status }}</td>
-                    <td>{{ task.action }}</td>
-                    <td><button @click="deleteTask">Delete</button></td>
+                    <td>
+                        <button @click="edit">
+                            <font-awesome-icon icon="pen-to-square" class="pen"/>
+                        </button>
+                        <button @click="edit">
+                        <font-awesome-icon icon="trash" class="fa-trash"/>
+                    </button>
+                    </td>
+
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    </div>
 </template>
-
 
 <script>
 import "flatpickr/dist/flatpickr.css";
 import flatpickr from "flatpickr";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+library.add(faCirclePlus);
+library.add(faTrash);
+library.add(faPenToSquare);
 
 export default {
     name: 'HelloWorld',
     props: {
         msg: String
     },
+    components: {
+        FontAwesomeIcon,
+    },
     data() {
         return {
-            myStyle:{color:"#00144A"},
             tasks: [],
             nameField: '',
             descriptionField: '',
@@ -113,6 +131,26 @@ export default {
                 })
                 .catch(error => console.log('error', error))
         },
+        remove(id){
+            const endpoint = `http://localhost:8080/delete/${id}`;
+            const requestOptions = {
+                method: 'DELETE',
+                redirect: 'follow'
+            };
+
+            fetch(endpoint, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    console.log('Deleted', result);
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+
+        },
+        edit(){
+
+        },
         formatDate(date) {
             const options = {
                 day: 'numeric',
@@ -150,26 +188,25 @@ export default {
 
 <style scoped>
 
-
-
 input{
     margin-right: 25px;
-    width:400px;
+    width:100%;
     color: #00144A;
 }
 button{
-    width:150px;
-    color: #EBF8FF;
-    background: #1B90FF;
-    border-radius: 40px 40px 40px 40px / 200% 200%;
-    margin-right: 50px;
+    width:60px;
+    color: #0057d2;
+    background:  #EBF8FF;
+    border-radius: 50%;
+    margin-right: 20px;
+
 }
 .addTask {
+    width: 100%;
     display: flex;
     flex-direction: row;
     padding: 30px;
 }
-
 .container {
     max-width: 100%;
     max-height: 100%;
@@ -182,31 +219,51 @@ button{
     margin-top: 50px;
     width: 100%;
 }
-.todoTable th#Task { width: 10%; }
-.todoTable th#Description { width: 50%; }
-.todoTable th#Deadline { width: 10%; }
-.todoTable th#Status { width: 10%; }
-.todoTable th#Action { width: 10%; }
-
+.column_checkbox{
+    width: 5%;
+}
+.column_task{
+    width: 20%;
+}
+.column_description{
+    width: 30%;
+}
+.column_deadline{
+    width: 15%;
+}
+.column_status{
+    width: 15%;
+}
+.column_action{
+    width: 15%;
+}
 
 .filter {
     float: right;
     margin-right: 20px;
-
 }
 .todoOptions {
     width: 150px;
     color: #EBF8FF;
-    background: #1B90FF;
+    background: #0057d2;
     border-radius: 30px 30px 30px 30px / 200% 200%;
 }
 .errorText{
     color: red;
+    padding-bottom: 50px;
 }
-.row{
-    color: white;
-    text-align:center;
-    margin-right: 600px;
+.table{
+    color: #D1EFFF;
+    text-align: left;
+
+}
+.h_yourTasks{
+    padding-top: 20px;
+    text-align: center;
+    -webkit-text-stroke: 1px  #0057d2;
+    -webkit-text-fill-color: #D1EFFF;
+
+
 }
 
 </style>
