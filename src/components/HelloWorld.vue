@@ -7,7 +7,6 @@
             <button type="button" @click="submitForm">
                 <font-awesome-icon icon="circle-plus" size="3x" class="circle-plus-icon" />
             </button>
-
         </div>
         <div>
             <div class = "errorText"></div>
@@ -45,11 +44,11 @@
                     <td>{{ task.status }}</td>
                     <td>
                         <button @click="edit">
-                            <font-awesome-icon icon="pen-to-square" class="pen"/>
+                            <font-awesome-icon icon="pen" class="pen"/>
                         </button>
-                        <button @click="edit">
-                        <font-awesome-icon icon="trash" class="fa-trash"/>
-                    </button>
+                        <button @click="remove()">
+                            <font-awesome-icon icon="trash" class="trash"/>
+                        </button>
                     </td>
 
                 </tr>
@@ -66,10 +65,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 library.add(faCirclePlus);
 library.add(faTrash);
-library.add(faPenToSquare);
+library.add(faPen);
 
 export default {
     name: 'HelloWorld',
@@ -260,10 +259,9 @@ button{
 .h_yourTasks{
     padding-top: 20px;
     text-align: center;
+    text-transform: uppercase;
     -webkit-text-stroke: 1px  #0057d2;
     -webkit-text-fill-color: #D1EFFF;
-
-
 }
 
 </style>
