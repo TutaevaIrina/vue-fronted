@@ -15,11 +15,12 @@
             <h4 class="h_yourTasks">Your tasks</h4>
         </div>
         <div class="filter">
-            <select class="form-select">
+            <select class="form-select" v-model="filterCrit">
                 <option value="active">Active</option>
                 <option value="completed">Completed</option>
                 <option value="expired">Expired</option>
             </select>
+
         </div>
         <div class="todoTable">
             <div class="row"></div>
@@ -37,7 +38,7 @@
                 <tbody class="tasks">
                 <tr v-for="task in tasks" :key="task.id">
                     <td class="column_checkbox">
-                        <button class="btn btn-primary-check">
+                        <button class="btn btn-primary-check" @click="toggleCompleted(task)">
                             <font-awesome-icon icon="check" class="check" />
                         </button>
                     </td>
@@ -72,14 +73,16 @@
                     </td>
                     <td class="column_status">
                         <span v-if="task.completed" class="text-success">Completed</span>
-                        <span v-else class="text-warning"></span>
+                        <span v-else-if="task.status === 'expired'" class="text-danger">Expired</span>
+                        <span v-else class="text-warning">{{ task.status }}</span>
                     </td>
+
                     <td class="column_action">
                         <button @click="edit(task)" class="btn btn-primary" v-if="!task.editing">
                             <font-awesome-icon icon="pen" class="pen" />
                         </button>
                         <button @click="update(task)" class="btn btn-success" v-if="task.editing">
-                            <font-awesome-icon icon="check" class="check" />
+                            <font-awesome-icon icon="floppy-disk" class="disk" />
                         </button>
                         <button @click="remove(task.id)" class="btn btn-danger">
                             <font-awesome-icon icon="trash" class="trash" />
@@ -97,14 +100,12 @@ import "flatpickr/dist/flatpickr.css";
 import flatpickr from "flatpickr";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import {faCirclePlus, faFloppyDisk, faTrash, faPen, faCheck} from '@fortawesome/free-solid-svg-icons';
 library.add(faCirclePlus);
 library.add(faTrash);
 library.add(faPen);
 library.add(faCheck);
+library.add(faFloppyDisk);
 
 export default {
     name: 'HelloWorld',
@@ -120,7 +121,7 @@ export default {
             nameField: '',
             descriptionField: '',
             deadlineField: '',
-            filterCrit: ''
+            filterCrit: 'active'
         }
     },
     mounted() {
@@ -143,7 +144,9 @@ export default {
                 .then(result => {
                     this.tasks = result.map(task => ({
                         ...task,
-                        editing: false
+                        editing: false,
+                        status: this.getTaskStatus(task.deadline),
+                        completed: task.completed
                     }));
                 })
                 .catch(error => console.log('error', error))
@@ -201,6 +204,7 @@ export default {
                 task.editing = false;
                 return;
             }
+
             const data = {
                 name: task.name,
                 description: task.description,
@@ -256,13 +260,58 @@ export default {
         },
         openDatePicker(taskId) {
             const inputElement = this.$refs['deadlineInput_' + taskId];
+            const task = this.tasks.find(task => task.id === taskId);
+
             flatpickr(inputElement, {
                 minDate: "today",
                 onChange: function (selectedDates) {
-                    this.tasks.find(task => task.id === taskId).deadline = selectedDates[0];
-                }.bind(this)
+                    task.deadline = selectedDates[0];
+                }
             });
         },
+        getTaskStatus(deadline) {
+            const currentDate = new Date();
+            const taskDeadline = new Date(deadline);
+
+            if (taskDeadline < currentDate) {
+                return "expired";
+            } else if (taskDeadline > currentDate) {
+                return "active";
+            } else {
+                return "completed";
+            }
+        },
+        toggleCompleted(task) {
+            task.completed = !task.completed;
+
+            const endpoint = `http://localhost:8080/edit/${task.id}`;
+            const data = {
+                completed: task.completed
+            };
+
+            const requestOptions = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+
+            fetch(endpoint, requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => console.log('error', error));
+        },
+        watch: {
+            filterCrit: {
+                handler() {
+                    this.loadTasks();
+                },
+                immediate: true
+            }
+        }
     }
 }
 
@@ -389,5 +438,13 @@ button {
 .btn.btn-primary-check:hover .circle-plus-icon,
 .btn.btn-primary-check:focus .circle-plus-icon {
     color: #28a745;
+}
+
+.status-completed {
+    color: green; /* Change the text color to green for completed tasks */
+}
+
+.status-active {
+    color: orange; /* Change the text color to orange for active tasks */
 }
 </style>
