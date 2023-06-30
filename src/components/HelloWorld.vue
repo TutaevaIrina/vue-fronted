@@ -24,7 +24,7 @@
         </div>
         <div class="todoTable">
             <div class="row"></div>
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th class="column_checkbox"></th>
@@ -57,11 +57,10 @@
                         <span v-if="!task.editing">{{ formatDate(task.deadline) }}</span>
                         <input
                             v-else
-                            type="text"
-                            :ref="`deadlineInput_${task.id}`"
+                            type="date"
                             class="form-control"
                             v-model="task.deadline"
-                            @click="openDatePicker(task.id)"
+                            :min="getCurrentDate()"
                         />
                     </td>
                     <td class="column_status">
@@ -221,6 +220,7 @@ export default {
                 })
                 .catch(error => console.log('error', error));
             task.editing = false;
+            this.deadlineField = task.deadline;
         },
         formatDate(date) {
             const options = {
@@ -252,15 +252,12 @@ export default {
                 document.querySelector(".errorText").innerHTML = "";
             }
         },
-        openDatePicker(taskId) {
-            const inputElement = this.$refs['deadlineInput_' + taskId];
-            const task = this.tasks.find(task => task.id === taskId);
+        openDatePicker() {
 
-            flatpickr(inputElement, {
+
+            flatpickr( {
                 minDate: "today",
-                onChange: function (selectedDates) {
-                    task.deadline = selectedDates[0];
-                }
+
             });
         },
         getTaskStatus(deadline) {
@@ -300,6 +297,20 @@ export default {
                     console.log('Success:', data);
                 })
                 .catch(error => console.log('error', error));
+        },
+        getCurrentDate() {
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            let month = (currentDate.getMonth() + 1).toString();
+            let day = currentDate.getDate().toString();
+
+            if (month.length === 1) {
+                month = '0' + month;
+            }
+            if (day.length === 1) {
+                day = '0' + day;
+            }
+            return `${year}-${month}-${day}`;
         },
 
         toggleSortDirection() {
@@ -344,21 +355,6 @@ export default {
 
 <style scoped>
 
-.editable-field {
-    border: none;
-    outline: none;
-    background-color: transparent;
-    color: inherit;
-    padding: 0;
-    margin: 0;
-    font-size: inherit;
-    width: 100%;
-}
-
-.edited-field {
-    border-bottom: 1px solid gray;
-}
-
 input {
     margin-right: 25px;
     width: 100%;
@@ -399,6 +395,10 @@ button {
     margin-top: 50px;
     width: 100%;
 }
+.todoTable table.table-striped thead {
+    background-color: #D1EFFF;
+    color: #00144a;
+}
 
 .column_checkbox {
     width: 5%;
@@ -427,13 +427,6 @@ button {
 .filter {
     float: right;
     margin-right: 20px;
-}
-
-.todoOptions {
-    width: 150px;
-    color: #EBF8FF;
-    background: #0057d2;
-    border-radius: 30px 30px 30px 30px / 200% 200%;
 }
 
 .errorText {
