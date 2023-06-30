@@ -19,8 +19,8 @@
                 <option value="active">Active</option>
                 <option value="completed">Completed</option>
                 <option value="expired">Expired</option>
+                <option value="all">All</option>
             </select>
-
         </div>
         <div class="todoTable">
             <div class="row"></div>
@@ -30,53 +30,45 @@
                     <th class="column_checkbox"></th>
                     <th class="column_task">Task</th>
                     <th class="column_description">Description</th>
-                    <th class="column_deadline">Deadline</th>
+                    <th class="column_deadline" @click="toggleSortDirection">
+                        Deadline
+                        <font-awesome-icon icon="sort" class="sort" @click="sort" />
+                    </th>
                     <th class="column_status">Status</th>
                     <th class="column_action"></th>
                 </tr>
                 </thead>
                 <tbody class="tasks">
-                <tr v-for="task in tasks" :key="task.id">
+                <tr v-for="task in filteredTasks" :key="task.id">
                     <td class="column_checkbox">
-                        <button class="btn btn-primary-check" @click="toggleCompleted(task)">
+                        <button :class="['btn', 'btn-primary-check', { 'btn-success': task.completed }]" @click="toggleCompleted(task)">
                             <font-awesome-icon icon="check" class="check" />
                         </button>
                     </td>
                     <td class="column_task">
                         <span v-if="!task.editing">{{ task.name }}</span>
-                        <input
-                            v-else
-                            type="text"
-                            v-model="task.name"
-                            class="editable-field edited-field"
-                        />
+                        <input v-else type="text" v-model="task.name" class="form-control"/>
                     </td>
                     <td class="column_description">
                         <span v-if="!task.editing">{{ task.description }}</span>
-                        <input
-                            v-else
-                            type="text"
-                            v-model="task.description"
-                            class="editable-field edited-field"
-                        />
+                        <input v-else type="text" v-model="task.description" class="form-control"/>
                     </td>
                     <td class="column_deadline">
                         <span v-if="!task.editing">{{ formatDate(task.deadline) }}</span>
                         <input
                             v-else
                             type="text"
+                            :ref="`deadlineInput_${task.id}`"
+                            class="form-control"
                             v-model="task.deadline"
-                            :ref="'deadlineInput_' + task.id"
-                            class="editable-field edited-field"
-                            @focus="openDatePicker(task.id)"
+                            @click="openDatePicker(task.id)"
                         />
                     </td>
                     <td class="column_status">
                         <span v-if="task.completed" class="text-success">Completed</span>
                         <span v-else-if="task.status === 'expired'" class="text-danger">Expired</span>
-                        <span v-else class="text-warning">{{ task.status }}</span>
+                        <span v-else-if="task.status === 'active'" class="text-warning">Active</span>
                     </td>
-
                     <td class="column_action">
                         <button @click="edit(task)" class="btn btn-primary" v-if="!task.editing">
                             <font-awesome-icon icon="pen" class="pen" />
@@ -100,12 +92,13 @@ import "flatpickr/dist/flatpickr.css";
 import flatpickr from "flatpickr";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import {faCirclePlus, faFloppyDisk, faTrash, faPen, faCheck} from '@fortawesome/free-solid-svg-icons';
+import {faCirclePlus, faFloppyDisk, faTrash, faPen, faCheck, faSort} from '@fortawesome/free-solid-svg-icons';
 library.add(faCirclePlus);
 library.add(faTrash);
 library.add(faPen);
 library.add(faCheck);
 library.add(faFloppyDisk);
+library.add(faSort);
 
 export default {
     name: 'HelloWorld',
@@ -121,7 +114,8 @@ export default {
             nameField: '',
             descriptionField: '',
             deadlineField: '',
-            filterCrit: 'active'
+            filterCrit: 'all',
+            sortDirection: 'desc',
         }
     },
     mounted() {
@@ -275,7 +269,7 @@ export default {
 
             if (taskDeadline < currentDate) {
                 return "expired";
-            } else if (taskDeadline > currentDate) {
+            } else if (taskDeadline >= currentDate) {
                 return "active";
             } else {
                 return "completed";
@@ -286,7 +280,10 @@ export default {
 
             const endpoint = `http://localhost:8080/edit/${task.id}`;
             const data = {
-                completed: task.completed
+                completed: task.completed,
+                name: task.name,
+                description: task.description,
+                deadline: task.deadline
             };
 
             const requestOptions = {
@@ -304,14 +301,42 @@ export default {
                 })
                 .catch(error => console.log('error', error));
         },
-        watch: {
-            filterCrit: {
-                handler() {
-                    this.loadTasks();
-                },
-                immediate: true
-            }
+
+        toggleSortDirection() {
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
         }
+    },
+    computed: {
+        filteredTasks() {
+            const filter = this.filterCrit;
+            if (filter === "active") {
+                return this.sortedTasks.filter(
+                    (task) => !task.completed && task.status === "active"
+                );
+            } else if (filter === "completed") {
+                return this.sortedTasks.filter((task) => task.completed);
+            } else if (filter === "expired") {
+                return this.sortedTasks.filter(
+                    (task) => !task.completed && task.status === "expired"
+                );
+            } else if (filter === "all") {
+                return this.sortedTasks;
+            }
+            return this.sortedTasks;
+        },
+        sortedTasks() {
+            const sorted = [...this.tasks];
+            sorted.sort((a, b) => {
+                const dateA = new Date(a.deadline);
+                const dateB = new Date(b.deadline);
+                if (this.sortDirection === 'asc') {
+                    return dateA - dateB;
+                } else {
+                    return dateB - dateA;
+                }
+            });
+            return sorted;
+        },
     }
 }
 
@@ -441,10 +466,10 @@ button {
 }
 
 .status-completed {
-    color: green; /* Change the text color to green for completed tasks */
+    color: green;
 }
 
 .status-active {
-    color: orange; /* Change the text color to orange for active tasks */
+    color: orange;
 }
 </style>
