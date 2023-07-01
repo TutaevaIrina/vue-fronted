@@ -24,7 +24,7 @@
         </div>
         <div class="todoTable">
             <div class="row"></div>
-            <table class="table table-striped">
+            <table class="table table-hover" style="background-color: #f8f9fa;">
                 <thead>
                 <tr>
                     <th class="column_checkbox"></th>
@@ -252,12 +252,15 @@ export default {
                 document.querySelector(".errorText").innerHTML = "";
             }
         },
-        openDatePicker() {
+        openDatePicker(taskId) {
+            const inputElement = this.$refs['deadlineInput_' + taskId];
+            const task = this.tasks.find(task => task.id === taskId);
 
-
-            flatpickr( {
+            flatpickr(inputElement, {
                 minDate: "today",
-
+                onChange: function (selectedDates) {
+                    task.deadline = selectedDates[0];
+                }
             });
         },
         getTaskStatus(deadline) {
@@ -266,7 +269,7 @@ export default {
 
             if (taskDeadline < currentDate) {
                 return "expired";
-            } else if (taskDeadline >= currentDate) {
+            } else if (taskDeadline > currentDate) {
                 return "active";
             } else {
                 return "completed";
@@ -402,28 +405,47 @@ button {
 
 .column_checkbox {
     width: 5%;
+    background-color: #00144A;
+    color: #EBF8FF;
 }
 
 .column_task {
     width: 20%;
+    font-weight: bolder;
+    background-color: #00144A;
+    color: #EBF8FF;
+
 }
 
 .column_description {
     width: 30%;
+    background-color: #00144A;
+    color: #EBF8FF;
 }
 
 .column_deadline {
     width: 15%;
+    align-content: center;
+    background-color: #EBF8FF;
+    background-color: #00144A;
+    color: #EBF8FF;
+    font-weight: bolder;
 }
 
 .column_status {
     width: 15%;
+    text-align: center;
+    background-color: #EBF8FF;
+    background-color: #00144A;
+    color: #EBF8FF;
 }
 
 .column_action {
     width: 15%;
+    background-color: #EBF8FF;
+    background-color: #00144A;
+    color: #EBF8FF;
 }
-
 .filter {
     float: right;
     margin-right: 20px;
@@ -433,10 +455,26 @@ button {
     color: red;
     padding-bottom: 50px;
 }
+.text-success{
+    font-weight: bold;
+}
+.text-warning{
+    font-weight: bold;
+}
+.text-danger{
+    font-weight: bold;
+}
 
-.table {
-    color: #D1EFFF;
+.table.table-hover {
     text-align: left;
+}
+
+.table.table-hover th,
+.table.table-hover td {
+    border: none;
+}
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #0040B0;
 }
 
 .h_yourTasks {
@@ -452,17 +490,14 @@ button {
     color: #28a745;
     border-color: #28a745;
 }
+thead{
+    font-size: large;
+    color: #00144A;
+}
 
 .btn.btn-primary-check:hover .circle-plus-icon,
 .btn.btn-primary-check:focus .circle-plus-icon {
     color: #28a745;
 }
 
-.status-completed {
-    color: green;
-}
-
-.status-active {
-    color: orange;
-}
 </style>
