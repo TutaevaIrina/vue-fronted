@@ -25,17 +25,17 @@
         <div class="todoTable">
             <div class="row"></div>
             <table class="table table-hover" style="background-color: #f8f9fa;">
-                <thead>
+                <thead class="table-head">
                 <tr>
-                    <th class="column_checkbox"></th>
-                    <th class="column_task">Task</th>
-                    <th class="column_description">Description</th>
-                    <th class="column_deadline" @click="toggleSortDirection">
+                    <th class="column-checkbox"></th>
+                    <th class="column-task">Task</th>
+                    <th class="column-description">Description</th>
+                    <th class="column-deadline" @click="toggleSortDirection">
                         Deadline
                         <font-awesome-icon icon="sort" class="sort" @click="sort" />
                     </th>
-                    <th class="column_status">Status</th>
-                    <th class="column_action"></th>
+                    <th class="column-status">Status</th>
+                    <th class="column-action"></th>
                 </tr>
                 </thead>
                 <tbody class="tasks">
@@ -63,10 +63,19 @@
                             :min="getCurrentDate()"
                         />
                     </td>
-                    <td class="column_status">
-                        <span v-if="task.completed" class="text-success">Completed</span>
-                        <span v-else-if="task.status === 'expired'" class="text-danger">Expired</span>
-                        <span v-else-if="task.status === 'active'" class="text-warning">Active</span>
+                    <td class="column_status text-center">
+                        <span v-if="task.completed" class="text-success">
+                            <div class="text-completed">Completed
+                            </div>
+                        </span>
+                        <span v-else-if="task.status === 'expired'" class="text-danger">
+                             <div class="text-expired">Expired
+                            </div>
+                        </span>
+                        <span v-else-if="task.status === 'active'" class="text-warning">
+                            <div class="text-active">Active
+                            </div>
+                        </span>
                     </td>
                     <td class="column_action">
                         <button @click="edit(task)" class="btn btn-primary" v-if="!task.editing">
@@ -252,17 +261,6 @@ export default {
                 document.querySelector(".errorText").innerHTML = "";
             }
         },
-        openDatePicker(taskId) {
-            const inputElement = this.$refs['deadlineInput_' + taskId];
-            const task = this.tasks.find(task => task.id === taskId);
-
-            flatpickr(inputElement, {
-                minDate: "today",
-                onChange: function (selectedDates) {
-                    task.deadline = selectedDates[0];
-                }
-            });
-        },
         getTaskStatus(deadline) {
             const currentDate = new Date();
             const taskDeadline = new Date(deadline);
@@ -411,9 +409,9 @@ button {
 
 .column_task {
     width: 20%;
-    font-weight: bolder;
     background-color: #00144A;
     color: #EBF8FF;
+    font-size: medium;
 
 }
 
@@ -421,34 +419,71 @@ button {
     width: 30%;
     background-color: #00144A;
     color: #EBF8FF;
+    font-size: medium;
 }
 
 .column_deadline {
     width: 15%;
     align-content: center;
-    background-color: #EBF8FF;
     background-color: #00144A;
     color: #EBF8FF;
     font-weight: bolder;
 }
 
 .column_status {
-    width: 15%;
+    width: 3%;
     text-align: center;
-    background-color: #EBF8FF;
     background-color: #00144A;
     color: #EBF8FF;
 }
 
 .column_action {
     width: 15%;
-    background-color: #EBF8FF;
     background-color: #00144A;
     color: #EBF8FF;
+    text-align: center;
+}
+.column-checkbox{
+    background-color: #00144A;
+}
+.column-task{
+    background-color: #00144A;
+    color: #4DB1FF;
+    font-size: large;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+.column-description{
+    background-color: #00144A;
+    color: #4DB1FF;
+    font-size: large;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+.column-deadline{
+    background-color: #00144A;
+    color: #4DB1FF;
+    font-size: large;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+.column-status{
+    background-color: #00144A;
+    color: #4DB1FF;
+    font-size: large;
+    font-weight: bold;
+    padding-bottom: 20px;
+    text-align: center;
+}
+.column-action{
+    background-color: #00144A;
 }
 .filter {
     float: right;
     margin-right: 20px;
+}
+.form-select{
+    font-weight: bolder;
 }
 
 .errorText {
@@ -476,6 +511,10 @@ button {
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
     background-color: #0040B0;
 }
+.form-control{
+    background-color: #EBF8FF;
+    color: #0040B0;
+}
 
 .h_yourTasks {
     padding-top: 20px;
@@ -490,10 +529,38 @@ button {
     color: #28a745;
     border-color: #28a745;
 }
-thead{
-    font-size: large;
-    color: #00144A;
+.form-select{
+    background-color: #EBF8FF;
+    color: #0040B0;
 }
+.text-completed{
+
+    background-color: #F5FAE5;
+    width: 105px;
+    color: #188918;
+    font-size: medium;
+    border-radius: 40%;
+    text-align-all: center;
+    padding: 5px;
+
+}
+.text-expired{
+    background-color: #FFEAF4;
+    width: 105px;
+    color: #D20A0A;
+    border-radius: 40%;
+    text-align-all: center;
+    padding: 5px;
+}
+.text-active{
+    background-color: #FFF8D6;
+    width: 105px;
+    color: #C35500;
+    border-radius: 40%;
+    text-align-all: center;
+    padding: 5px;
+}
+
 
 .btn.btn-primary-check:hover .circle-plus-icon,
 .btn.btn-primary-check:focus .circle-plus-icon {
@@ -501,3 +568,4 @@ thead{
 }
 
 </style>
+

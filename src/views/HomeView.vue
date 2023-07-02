@@ -1,7 +1,7 @@
 <template>
   <div class="addTask">
     <img alt="logo" src="../assets/logoStudious2.png">
-    <HelloWorld msg="Hello World!"/>
+    <HelloWorld mes="Hello World!"/>
   </div>
 </template>
 
