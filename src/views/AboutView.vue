@@ -1,6 +1,6 @@
 <template>
     <div class="about">
-        <h1>Your tasks</h1>
+        <img alt="logo" src="../assets/logoStudious2.png">
         <CalendarView msg="Calendar"/>
     </div>
 </template>

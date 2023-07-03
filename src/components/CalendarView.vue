@@ -1,7 +1,8 @@
 <template>
-    <div class="container">
+    <div class="space">
+    </div>
+    <div class="containerCalendar">
         <div class="calendar-view">
-            <h1>{{ msg }}</h1>
             <div class="header">
                 <h1>{{ current.format('MMMM YYYY') }}</h1>
                 <div class="d-flex align-items-center">
@@ -10,7 +11,7 @@
                 </div>
             </div>
             <table class="table">
-                <thead>
+                <thead class="dayWeek">
                 <tr>
                     <th scope="col" v-for="dayName in dayNames" :key="dayName">{{ dayName }}</th>
                 </tr>
@@ -20,7 +21,7 @@
                     <td v-for="day in week" :class="{'other': day.other, 'today': day.today}" :key="day.date">
                         <button class="day-button" @click="openDay(day)" @mouseover="showFingerSign(day)" @mouseleave="hideFingerSign(day)">
                             <div class="day-number">{{ day.date.date() }}</div>
-                            <div class="day-tasks" v-show="day.tasks.length > 0">
+                            <div class="day-tasks">
                                 <span v-for="(task, index) in day.tasks" class="task-point" :style="{ backgroundColor: getTaskColor(index) }" :key="index"></span>
                             </div>
                             <div class="finger-sign" v-show="day.showFingerSign"></div>
@@ -29,27 +30,31 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="details" :class="{'in': openDetails, 'out': !openDetails}" @animationend="handleAnimationEnd">
-                <div class="arrow"></div>
-                <div class="events" :class="{'in': openDetails, 'out': !openDetails}">
-                    <div v-if="selectedDay">
-                        <div v-for="event in selectedDay.events" class="event" :class="{'empty': !event}" :key="event">
-                            {{ event.title }}
-                        </div>
-                        <div v-for="task in selectedDay.tasks" class="task" :class="{'empty': !task}" :key="task">
-                            {{ task.name }}
-                        </div>
-                    </div>
+        </div>
+        <div class="tasks-section">
+            <div v-if="selectedDay">
+                <div v-for="task in selectedDay.tasks" class="task" :class="{'empty': !task}" :key="task">
+                    {{ task.name }}
                 </div>
             </div>
         </div>
     </div>
+    <footer>
+        <div class="footer-content">
+            <div class="contact-details">
+                <p>Email: info@studious.com</p>
+                <p>Phone: 123-456-7890</p>
+            </div>
+        </div>
+        <div class="bottom-bar">
+            <p>© 2023 Studious. All rights reserved.</p>
+        </div>
+    </footer>
 </template>
 
 <script>
 import axios from 'axios';
-import moment from 'moment'
-
+import moment from 'moment';
 export default {
     name: 'CalendarView',
     props: {
@@ -68,6 +73,7 @@ export default {
             openDetails: false,
             selectedDay: null,
             dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            dropdownOpen: false
         };
     },
 
@@ -103,22 +109,11 @@ export default {
             }
 
             return weeks;
-        },
-        legend() {
-            const categories = ['blue', 'orange', 'green', 'yellow'];
-            return categories.map((category) => ({
-                text: category,
-                color: category,
-            }));
-        },
+        }
     },
 
     methods: {
         fetchTasks() {
-            // Make an HTTP request to fetch tasks from the backend
-            // You can use a library like Axios or the built-in fetch API
-
-            // Example using Axios:
             axios
                 .get('http://localhost:8080/tasks')
                 .then((response) => {
@@ -128,17 +123,14 @@ export default {
                         deadline: moment(task.deadline, 'YYYY-MM-DD').toDate(), // Parse the deadline using the correct format
                     }));
 
-                    // Draw the calendar
                     this.draw();
                 })
                 .catch((error) => {
-                    // Handle error
                     console.error('Error fetching tasks:', error);
                 });
         },
 
         draw() {
-            // Draw the calendar
             this.drawMonth();
 
             const currentDay = this.month.querySelector('.today');
@@ -150,7 +142,7 @@ export default {
             }
         },
         getTaskColor(index) {
-            const colors = ['#D1EFFF', '#4DB1FF', '#0057D2', '#0040B0']; // Define an array of colors
+            const colors = ['#1B90FF', '#4DB1FF', '#0057D2', '#0040B0']; // Define an array of colors
             const colorIndex = index % colors.length; // Get the color index based on the task index
             return colors[colorIndex]; // Return the color for the task point
         },
@@ -174,10 +166,10 @@ export default {
                     const dayElement = document.createElement('div');
                     dayElement.className = `day ${day.other ? 'other' : ''} ${day.today ? 'today' : ''}`;
                     dayElement.innerHTML = `
-            <div class="day-number">${day.number}</div>
-            <div class="day-tasks" v-show="day.tasks.length > 0"></div>
-            <div class="finger-sign" v-show="day.showFingerSign"></div>
-          `;
+              <div class="day-number">${day.number}</div>
+              <div class="day-tasks" v-show="day.tasks.length > 0"></div>
+              <div class="finger-sign" v-show="day.showFingerSign"></div>
+            `;
 
                     const buttonElement = document.createElement('button');
                     buttonElement.className = 'day-button';
@@ -214,11 +206,6 @@ export default {
             return this.tasks.filter(task => moment(task.deadline).isSame(date, 'day'));
         },
 
-        closeDay() {
-            this.openDetails = false;
-            this.selectedDay = null;
-        },
-
         nextMonth() {
             this.current.add(1, 'month');
             this.fetchTasks();
@@ -230,13 +217,6 @@ export default {
         },
         formatDate(date) {
             return moment(date).format('Do MMMM YYYY');
-        },
-
-        handleAnimationEnd() {
-            if (this.oldMonth && this.oldMonth.parentNode) {
-                this.oldMonth.parentNode.removeChild(this.oldMonth);
-                this.oldMonth = null;
-            }
         },
 
         showFingerSign(day) {
@@ -251,21 +231,26 @@ export default {
 </script>
 
 <style>
-@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+
+
+body {
+    background-color: #00144A;
+}
+
 .day-tasks {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
+    background-color: white;
 }
 
 .task-point {
     display: inline-block;
-    width: 10px; /* Increase the size of the task point */
-    height: 10px; /* Increase the size of the task point */
-    background-color: red; /* Replace with desired color */
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin: 2px; /* Add spacing between the task points */
+    margin: 2px;
 }
 
 .finger-sign {
@@ -275,120 +260,83 @@ export default {
     transform: translate(-50%, -50%);
     width: 20px;
     height: 20px;
-    /* Replace with the path to your finger sign image */
     background-size: cover;
     opacity: 0.8;
     pointer-events: none;
 }
 
 .day-button {
-    background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
-    position: relative; /* Add position relative to the day button */
+    position: relative;
 }
 
-.details {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    width: 200px;
-    height: 200px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 1; /* Add a higher z-index to the details container */
-}
-
-.in {
-    opacity: 1;
-    visibility: visible;
-    z-index: 1; /* Add a higher z-index to the details container */
-}
-
-.out {
-    opacity: 0;
-    visibility: hidden;
-    z-index: -1; /* Set a negative z-index to move the details container behind the calendar */
-}
-
-
-.arrow {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid #fff;
-}
-
-.events {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.event,
 .task {
     margin-bottom: 5px;
 }
 
-.empty {
-    color: gray;
+.day-number {
+    color: #00144A;
+    font-size: 18px;
+}
+.dayWeek th {
+    font-size: x-large;
+    color: #0040B0;
 }
 
-.container {
+.containerCalendar {
+
     max-width: 800px;
-    margin: 0 auto;
+    margin: 20px auto;
     padding: 20px;
+    color: #EBF8FF;
+    background-color: #0040B0;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-}
-
-.week {
-    display: flex;
-}
-
-.day {
-    flex: 1;
-    position: relative;
-    text-align: center;
-    padding: 10px 0;
-}
-
-.other {
-    color: gray;
-}
-
-.today {
-    border-radius: 50%;
+    color: #EBF8FF;
 }
 
 .day-number {
     font-weight: bold;
+    background-color: white;
+    color: #00144A;
 }
 
 .table {
     table-layout: fixed;
     width: 100%;
+    background-color: #D1EFFF;
 }
 
 .btn {
     font-size: 16px;
+    background-color: #0057d2;
+    color: #EBF8FF;
 }
+.space{
+    padding-bottom: 20px;
+}
+
+.today {
+    border-radius: 50%;
+}
+.other{
+    background-color: #188918;
+}
+.footer-content{
+    flex-shrink: 0;
+    padding-top: 100px;
+
+}
+
+
+
+
 </style>
+
+

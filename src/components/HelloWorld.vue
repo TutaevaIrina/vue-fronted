@@ -11,9 +11,6 @@
         <div>
             <div class="errorText"></div>
         </div>
-        <div>
-            <h4 class="h_yourTasks">Your tasks</h4>
-        </div>
         <div class="filter">
             <select class="form-select" v-model="filterCrit">
                 <option value="active">Active</option>
@@ -93,6 +90,17 @@
             </table>
         </div>
     </div>
+    <footer>
+        <div class="footer-content">
+            <div class="contact-details">
+                <p>Email: info@studious.com</p>
+                <p>Phone: 123-456-7890</p>
+            </div>
+        </div>
+        <div class="bottom-bar">
+            <p>© 2023 Studious. All rights reserved.</p>
+        </div>
+    </footer>
 </template>
 
 <script>
@@ -356,6 +364,10 @@ export default {
 
 <style scoped>
 
+body {
+    background-color: #00144A;
+}
+
 input {
     margin-right: 25px;
     width: 100%;
@@ -365,8 +377,8 @@ input {
 button {
     width: 50px;
     height: 50px;
-    color: #0057d2;
-    background: #EBF8FF;
+    color: #1B90FF;
+    background: white;
     border-radius: 50%;
     margin-right: 20px;
 }
@@ -396,10 +408,6 @@ button {
     margin-top: 50px;
     width: 100%;
 }
-.todoTable table.table-striped thead {
-    background-color: #D1EFFF;
-    color: #00144a;
-}
 
 .column_checkbox {
     width: 5%;
@@ -412,7 +420,6 @@ button {
     background-color: #00144A;
     color: #EBF8FF;
     font-size: medium;
-
 }
 
 .column_description {
@@ -423,7 +430,7 @@ button {
 }
 
 .column_deadline {
-    width: 15%;
+    width: 20%;
     align-content: center;
     background-color: #00144A;
     color: #EBF8FF;
@@ -431,14 +438,14 @@ button {
 }
 
 .column_status {
-    width: 3%;
-    text-align: center;
+    width: 5%;
     background-color: #00144A;
     color: #EBF8FF;
+    text-align: center;
 }
 
 .column_action {
-    width: 15%;
+    width: 20%;
     background-color: #00144A;
     color: #EBF8FF;
     text-align: center;
@@ -483,7 +490,8 @@ button {
     margin-right: 20px;
 }
 .form-select{
-    font-weight: bolder;
+    font-weight: bold;
+    color: #1B90FF;
 }
 
 .errorText {
@@ -512,26 +520,14 @@ button {
     background-color: #0040B0;
 }
 .form-control{
-    background-color: #EBF8FF;
+    background-color: white;
     color: #0040B0;
-}
-
-.h_yourTasks {
-    padding-top: 20px;
-    text-align: center;
-    text-transform: uppercase;
-    -webkit-text-stroke: 1px #0057d2;
-    -webkit-text-fill-color: #D1EFFF;
 }
 
 .btn-primary-check:hover,
 .btn-primary-check:focus {
     color: #28a745;
     border-color: #28a745;
-}
-.form-select{
-    background-color: #EBF8FF;
-    color: #0040B0;
 }
 .text-completed{
 
@@ -561,10 +557,15 @@ button {
     padding: 5px;
 }
 
-
 .btn.btn-primary-check:hover .circle-plus-icon,
 .btn.btn-primary-check:focus .circle-plus-icon {
     color: #28a745;
+}
+
+.footer-content{
+    flex-shrink: 0;
+    padding-top: 100px;
+
 }
 
 </style>
