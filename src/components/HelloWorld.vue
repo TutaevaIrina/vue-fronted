@@ -104,17 +104,17 @@
 </template>
 
 <script>
-import "flatpickr/dist/flatpickr.css";
-import flatpickr from "flatpickr";
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {faCirclePlus, faFloppyDisk, faTrash, faPen, faCheck, faSort} from '@fortawesome/free-solid-svg-icons';
-library.add(faCirclePlus);
-library.add(faTrash);
-library.add(faPen);
-library.add(faCheck);
-library.add(faFloppyDisk);
-library.add(faSort);
+import "flatpickr/dist/flatpickr.css"
+import flatpickr from "flatpickr"
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {faCirclePlus, faFloppyDisk, faTrash, faPen, faCheck, faSort} from '@fortawesome/free-solid-svg-icons'
+library.add(faCirclePlus)
+library.add(faTrash)
+library.add(faPen)
+library.add(faCheck)
+library.add(faFloppyDisk)
+library.add(faSort)
 
 export default {
     name: 'HelloWorld',
