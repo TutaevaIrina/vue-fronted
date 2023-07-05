@@ -4,7 +4,7 @@ import fetchMock from 'jest-fetch-mock';
 
 beforeEach(() => {
   fetchMock.resetMocks();
-  fetchMock.mockResponse(JSON.stringify({ data: 'Mocked response' }));
+  fetchMock.mockResponse(JSON.stringify({ data: 'Mocked response' }), { url: 'http://localhost:8080/tasks' });
 });
 describe('TasksView', () => {
 
