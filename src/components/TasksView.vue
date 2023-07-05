@@ -117,7 +117,7 @@ library.add(faFloppyDisk)
 library.add(faSort)
 
 export default {
-    name: 'HelloWorld',
+    name: 'TasksView',
     props: {
         msg: String
     },
@@ -250,26 +250,15 @@ export default {
             return new Date(date).toLocaleDateString('en-GB', options);
         },
         submitForm() {
-            let name = this.nameField;
-            let date = this.deadlineField;
-            let errorText = "";
-            if (name === "" && date === "") {
-                errorText = "Enter the title and the date";
-            } else if (name === "") {
-                errorText = "Enter the title";
-            } else if (date === "") {
-                errorText = "Enter the date";
-            }
-            if (errorText !== "") {
-                document.querySelector(".errorText").innerHTML = errorText;
-            } else {
+
+
                 this.save();
                 this.loadTasks();
-                this.nameField = "";
+               this.nameField = "";
                 this.descriptionField = "";
                 this.deadlineField = "";
-                document.querySelector(".errorText").innerHTML = "";
-            }
+
+
         },
         getTaskStatus(deadline) {
             const currentDate = new Date();
