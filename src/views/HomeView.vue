@@ -1,18 +1,17 @@
 <template>
   <div class="addTask">
     <img alt="logo" src="../assets/logoStudious2.png">
-    <HelloWorld mes="Hello World!"/>
+    <TasksView msg="© 2023 Studious. All rights reserved."/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import TasksView from '@/components/TasksView.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld
+    TasksView: TasksView
   }
 }
 </script>

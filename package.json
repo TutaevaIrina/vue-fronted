@@ -18,6 +18,7 @@
     "bootstrap": "^5.3.0",
     "core-js": "^3.8.3",
     "flatpickr": "^4.6.13",
+    "flush-promises": "^1.0.2",
     "mdbvue": "^6.7.4",
     "moment": "^2.29.4",
     "vue": "^3.2.13",
@@ -33,13 +34,15 @@
     "@vue/cli-plugin-unit-jest": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "@vue/test-utils": "^2.0.0-0",
-    "@vue/vue3-jest": "^27.0.0-alpha.1",
+    "@vue/vue3-jest": "^27.0.0",
     "babel-jest": "^27.0.6",
     "concurrently": "^8.2.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "http-server": "^14.1.1",
-    "jest": "^27.0.5"
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.0.5",
+    "jest-fetch-mock": "^3.0.3"
   },
   "eslintConfig": {
     "root": true,
@@ -73,6 +76,17 @@
     "not ie 11"
   ],
   "jest": {
-    "preset": "@vue/cli-plugin-unit-jest"
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.vue$": "@vue/vue3-jest",
+      "^.+\\.js$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!flatpickr)"
+    ]
   }
 }

@@ -38,7 +38,7 @@
                 <tbody class="tasks">
                 <tr v-for="task in filteredTasks" :key="task.id">
                     <td class="column_checkbox">
-                        <button :class="['btn', 'btn-primary-check', { 'btn-success': task.completed }]" @click="toggleCompleted(task)">
+                        <button :class="['btn', 'btn-primary-check', { 'btn-success': task.completed }, 'check-button']" @click="toggleCompleted(task)">
                             <font-awesome-icon icon="check" class="check" />
                         </button>
                     </td>
@@ -98,7 +98,7 @@
             </div>
         </div>
         <div class="bottom-bar">
-            <p>© 2023 Studious. All rights reserved.</p>
+            <p>{{ msg }}</p>
         </div>
     </footer>
 </template>
@@ -132,6 +132,8 @@ export default {
             deadlineField: '',
             filterCrit: 'all',
             sortDirection: 'desc',
+            sort: null,
+            status: 'incomplete'
         }
     },
     mounted() {
@@ -565,7 +567,10 @@ button {
 .footer-content{
     flex-shrink: 0;
     padding-top: 100px;
+}
 
+.bottom-bar{
+    padding-bottom: 50px;
 }
 
 </style>
