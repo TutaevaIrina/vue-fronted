@@ -377,8 +377,8 @@ input {
 button {
     width: 50px;
     height: 50px;
-    color: #1B90FF;
-    background: white;
+    color: white;
+    background: #1b90ff;
     border-radius: 50%;
     margin-right: 20px;
 }
@@ -526,9 +526,14 @@ button {
 
 .btn-primary-check:hover,
 .btn-primary-check:focus {
-    color: #28a745;
-    border-color: #28a745;
+    color: #00ff33;
+    border-color: #00ff33;
 }
+
+.btn-success.check-button {
+    background-color: #188918;
+}
+
 .text-completed{
 
     background-color: #F5FAE5;
