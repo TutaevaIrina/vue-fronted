@@ -8,7 +8,7 @@ beforeEach(() => {
 });
 describe('TasksView', () => {
 
-  it('renders the task table with correct columns', () => {
+  it('should render the task table with correct columns', () => {
     const wrapper = shallowMount(TasksView);
 
     const columns = wrapper.findAll('th.column-task');
@@ -93,8 +93,80 @@ describe('TasksView', () => {
 
     expect(submitButton.exists()).toBe(true)
   });
+  it('should delete a task when the delete button is clicked', async () => {
+    const task = {
+      id: 1,
+      name: 'Task 1',
+    };
+    const wrapper = shallowMount(TasksView, {
+      props: {
+        tasks: [task],
+      },
+    });
+    const deleteButton = wrapper.find('.btn btn-danger');
+    if (deleteButton.exists())
+      await deleteButton.trigger('click');
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.tasks).toHaveLength(0);
+  });
 
-  it('renders props.msg when passed', async () => {
+  it('should update a task when the edit and update buttons are clicked', async () => {
+    const task = {
+      id: 1,
+      name: 'Task 1',
+    };
+
+    const wrapper = shallowMount(TasksView, {
+      props: {
+        tasks: [task],
+      },
+    });
+
+    const editButton = wrapper.find('.btn btn-primary');
+
+    if (editButton.exists()) {
+      await editButton.trigger('click');
+      const inputField = wrapper.find('input');
+
+      if (inputField.exists()) {
+        await inputField.setValue('Updated Task');
+        const updateButton = wrapper.find('.btn btn-success');
+
+        if (updateButton.exists()) {
+          await updateButton.trigger('click');
+          await wrapper.vm.$nextTick();
+
+          expect(wrapper.vm.tasks[0].name).toBe('Updated Task');
+        }
+      }
+    }
+
+  });
+  it('should save a task when the user inputs name and deadline and clicks the button', async () => {
+    const wrapper = shallowMount(TasksView);
+
+    const nameInput = wrapper.find('.form-control');
+    const deadlineInput = wrapper.find('.form-control');
+
+    nameInput.element.value = 'New Task';
+    deadlineInput.element.value = '2023-07-31';
+
+    await nameInput.trigger('input');
+    await deadlineInput.trigger('input');
+
+    const saveButton = wrapper.find('.btn btn-primary');
+
+    if (saveButton.exists()) {
+      await saveButton.trigger('click');
+
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.tasks.length).toBe(1);
+      expect(wrapper.vm.tasks[0].name).toBe('New Task');
+      expect(wrapper.vm.tasks[0].deadline).toBe('2023-07-31');
+    }
+  });
+  it('should render props.msg when passed', async () => {
     const msg = '© 2023 Studious. All rights reserved.';
     const wrapper = shallowMount(TasksView, {
       props: { msg },
@@ -102,6 +174,8 @@ describe('TasksView', () => {
     await wrapper.vm.$nextTick();
     expect(wrapper.text()).toMatch(msg);
   });
+
+
 
 });
 

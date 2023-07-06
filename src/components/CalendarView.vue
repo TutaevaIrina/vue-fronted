@@ -7,7 +7,7 @@
                 <h1>{{ current.format('MMMM YYYY') }}</h1>
                 <div class="d-flex align-items-center">
                     <button class="btn btn-primary mr-2" @click="prevMonth">Prev</button>
-                    <button class="btn btn-primary" @click="nextMonth">Next</button>
+                    <button class="btn btn-primary next" @click="nextMonth">Next</button>
                 </div>
             </div>
             <table class="table">
@@ -53,8 +53,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-import moment from 'moment';
+const moment = require('moment');
+const axios = require('axios');
 export default {
     name: 'CalendarView',
     props: {
