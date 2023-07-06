@@ -150,9 +150,9 @@ export default {
             }
         },
         getTaskColor(index) {
-            const colors = ['#1B90FF', '#4DB1FF', '#0057D2']; // Define an array of colors
-            const colorIndex = index % colors.length; // Get the color index based on the task index
-            return colors[colorIndex]; // Return the color for the task point
+            const colors = ['#1B90FF', '#4DB1FF', '#0057D2'];
+            const colorIndex = index % colors.length;
+            return colors[colorIndex];
         },
 
         drawMonth() {
