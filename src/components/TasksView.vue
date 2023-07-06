@@ -52,12 +52,7 @@
                     </td>
                     <td class="column_deadline">
                         <span v-if="!task.editing">{{ formatDate(task.deadline) }}</span>
-                        <input
-                            v-else
-                            type="date"
-                            class="form-control"
-                            v-model="task.deadline"
-                            :min="getCurrentDate()"
+                        <input v-else type="date" class="form-control" v-model="editedDeadline" :min="getCurrentDate()"
                         />
                     </td>
                     <td class="column_status">
@@ -133,7 +128,8 @@ export default {
             filterCrit: 'all',
             sortDirection: 'desc',
             sort: null,
-            status: 'incomplete'
+            status: 'incomplete',
+            editedDeadline: '',
         }
     },
     mounted() {
@@ -148,20 +144,21 @@ export default {
             const endpoint = 'http://localhost:8080/tasks';
             const requestOptions = {
                 method: 'GET',
-                redirect: 'follow'
+                redirect: 'follow',
             };
 
             fetch(endpoint, requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                    this.tasks = result.map(task => ({
+                .then((response) => response.json())
+                .then((result) => {
+                    this.tasks = result.map((task) => ({
                         ...task,
                         editing: false,
                         status: this.getTaskStatus(task.deadline),
-                        completed: task.completed
+                        completed: task.completed,
                     }));
+                    console.log('Tasks loaded:', this.tasks);
                 })
-                .catch(error => console.log('error', error))
+                .catch((error) => console.log('error', error));
         },
         save() {
             const endpoint = 'http://localhost:8080/add'
@@ -205,6 +202,7 @@ export default {
         },
         edit(task) {
             task.editing = true;
+            this.editedDeadline = task.deadline;
         },
         update(task) {
             const endpoint = `http://localhost:8080/edit/${task.id}`;
@@ -220,7 +218,7 @@ export default {
             const data = {
                 name: task.name,
                 description: task.description,
-                deadline: task.deadline,
+                deadline: this.editedDeadline,
             };
 
             const requestOptions = {
