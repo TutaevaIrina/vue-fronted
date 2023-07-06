@@ -12,13 +12,13 @@ describe('CalendarView', () => {
         axios.get.mockClear();
     });
 
-    it('should render correctly', () => {
+    it('should render correctly', async () => {
         const wrapper = shallowMount(CalendarView);
         const footer = wrapper.find('footer');
         expect(footer.exists()).toBe(true);
     });
 
-    it('should fetch tasks on created', () => {
+    it('should fetch tasks on created', async () => {
         shallowMount(CalendarView);
         expect(axios.get).toHaveBeenCalledWith('http://localhost:8080/tasks');
     });

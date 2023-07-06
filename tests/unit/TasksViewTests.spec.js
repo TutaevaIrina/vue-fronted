@@ -2,13 +2,13 @@ import { shallowMount, flushPromises } from '@vue/test-utils';
 import TasksView from '@/components/TasksView.vue';
 import fetchMock from 'jest-fetch-mock';
 
-beforeEach(() => {
+beforeEach(async () => {
   fetchMock.resetMocks();
   fetchMock.mockResponse(JSON.stringify({ data: 'Mocked response' }), { url: 'http://localhost:8080/tasks' });
 });
 describe('TasksView', () => {
 
-  it('should render the task table with correct columns', () => {
+  it('should render the task table with correct columns', async () =>{
     const wrapper = shallowMount(TasksView);
 
     const columns = wrapper.findAll('th.column-task');
@@ -31,7 +31,7 @@ describe('TasksView', () => {
     expect(actionColumn.exists()).toBe(true);
   });
 
-  it('should display the deadline input field', () => {
+  it('should display the deadline input field', async () => {
     const wrapper = shallowMount(TasksView)
 
     const deadlineInput = wrapper.find('input[placeholder="Select date"]')
@@ -39,7 +39,7 @@ describe('TasksView', () => {
     expect(deadlineInput.exists()).toBe(true)
   });
 
-  it('should display the title input field', () => {
+  it('should display the title input field', async () => {
     const wrapper = shallowMount(TasksView)
 
     const titleInput = wrapper.find('input[placeholder="Enter title"]')
@@ -47,7 +47,7 @@ describe('TasksView', () => {
     expect(titleInput.exists()).toBe(true)
   });
 
-  it('should display the description input field', () => {
+  it('should display the description input field', async () => {
     const wrapper = shallowMount(TasksView)
 
     const descriptionInput = wrapper.find('input[placeholder="Enter description"]')
@@ -55,7 +55,7 @@ describe('TasksView', () => {
     expect(descriptionInput.exists()).toBe(true)
   });
 
-  it('should display the table header', () => {
+  it('should display the table header', async () => {
     const wrapper = shallowMount(TasksView)
 
     const tableHeader = wrapper.find('.table-head')
@@ -63,14 +63,14 @@ describe('TasksView', () => {
     expect(tableHeader.exists()).toBe(true)
   });
 
-  it('should display the filter select field', () => {
+  it('should display the filter select field', async () => {
     const wrapper = shallowMount(TasksView)
 
     const filterSelect = wrapper.find('select.form-select')
 
     expect(filterSelect.exists()).toBe(true)
   });
-  it('should display the table body', () => {
+  it('should display the table body', async () => {
     const wrapper = shallowMount(TasksView)
 
     const tableBody = wrapper.find('.tasks')
@@ -78,7 +78,7 @@ describe('TasksView', () => {
     expect(tableBody.exists()).toBe(true)
   });
 
-  it('should display the footer', () => {
+  it('should display the footer', async () => {
     const wrapper = shallowMount(TasksView)
 
     const footer = wrapper.find('footer')
@@ -86,7 +86,7 @@ describe('TasksView', () => {
     expect(footer.exists()).toBe(true)
   });
 
-  it('should display the submit button', () => {
+  it('should display the submit button', async () => {
     const wrapper = shallowMount(TasksView)
 
     const submitButton = wrapper.find('.circle-plus-icon')
