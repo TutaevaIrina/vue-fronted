@@ -128,7 +128,7 @@ export default {
                     // Assign the fetched tasks to the component data
                     this.tasks = response.data.map((task) => ({
                         name: task.name,
-                        deadline: moment(task.deadline, 'YYYY-MM-DD').toDate(), // Parse the deadline using the correct format
+                        deadline: moment(task.deadline, 'YYYY-MM-DD').toDate(),
                     }));
 
                     this.draw();

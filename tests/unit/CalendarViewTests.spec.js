@@ -56,6 +56,14 @@ describe('CalendarView', () => {
         expect(taskPoints.length).toBe(2);
     });
 
+    it('should render the correct month and year', async () => {
+        const wrapper = shallowMount(CalendarView);
+        const monthYearText = wrapper.find('h1').text();
+        const expectedMonthYear = moment().format('MMMM YYYY');
+        expect(monthYearText).toBe(expectedMonthYear);
+    });
+
+
     const NextButtonStub = {
         template: '<button class="btn-primary next" @click="nextMonth"></button>',
         methods: {
@@ -94,5 +102,14 @@ describe('CalendarView', () => {
         const expectedMonth = moment().month();
         expect(wrapper.vm.current.month() + 1).toBe(expectedMonth);
     });
+
+
+    it('should mark the current day as active', async () => {
+        const wrapper = shallowMount(CalendarView);
+        const currentDay = wrapper.find('.today');
+        const expectedCurrentDay = moment().date();
+        expect(currentDay.text()).toBe(expectedCurrentDay.toString());
+    });
+
 
 });
