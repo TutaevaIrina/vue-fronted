@@ -2,11 +2,12 @@ import { shallowMount, flushPromises } from '@vue/test-utils';
 import TasksView from '@/components/TasksView.vue';
 import fetchMock from 'jest-fetch-mock';
 
-beforeEach(async () => {
-  fetchMock.resetMocks();
-  fetchMock.mockResponse(JSON.stringify({ data: 'Mocked response' }), { url: 'http://localhost:8080/tasks' });
-});
 describe('TasksView', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+    fetchMock.mockResponse(JSON.stringify({ data: 'Mocked response' }), { url: 'http://localhost:8080/tasks' });
+  });
+
 
   it('should render the task table with correct columns', async () =>{
     const wrapper = shallowMount(TasksView);

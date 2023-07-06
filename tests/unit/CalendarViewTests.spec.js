@@ -46,11 +46,11 @@ describe('CalendarView', () => {
         axios.get.mockResolvedValueOnce({ data: tasks });
 
         const wrapper = shallowMount(CalendarView);
-        await flushPromises(); // Wait for the axios.get() promise to resolve
+        await flushPromises();
 
         const dayButton = wrapper.find('.day-button');
         dayButton.trigger('click');
-        await flushPromises(); // Wait for the task rendering to complete
+        await flushPromises();
 
         const taskPoints = wrapper.findAll('.task-point');
         expect(taskPoints.length).toBe(2);
