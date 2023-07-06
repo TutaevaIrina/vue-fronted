@@ -111,6 +111,14 @@ export default {
             return weeks;
         }
     },
+    watch: {
+        current: {
+            handler() {
+                this.openDetails = false;
+            },
+            deep: true,
+        },
+    },
 
     methods: {
         fetchTasks() {
@@ -134,7 +142,7 @@ export default {
             this.drawMonth();
 
             const currentDay = this.month.querySelector('.today');
-            if (currentDay) {
+            if (currentDay && typeof currentDay.scrollIntoView === 'function') {
                 currentDay.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center',
@@ -142,7 +150,7 @@ export default {
             }
         },
         getTaskColor(index) {
-            const colors = ['#1B90FF', '#4DB1FF', '#0057D2', '#0040B0']; // Define an array of colors
+            const colors = ['#1B90FF', '#4DB1FF', '#0057D2']; // Define an array of colors
             const colorIndex = index % colors.length; // Get the color index based on the task index
             return colors[colorIndex]; // Return the color for the task point
         },
@@ -150,7 +158,7 @@ export default {
         drawMonth() {
             if (this.month) {
                 this.oldMonth = this.month;
-                this.next = moment(this.current).isAfter(this.oldMonth);
+                this.next = moment(this.current, 'YYYY-MM-DD').isAfter(moment(this.oldMonth, 'YYYY-MM-DD'));
             }
 
             const month = document.createElement('div');
@@ -209,14 +217,22 @@ export default {
         nextMonth() {
             this.current.add(1, 'month');
             this.fetchTasks();
+            this.closeDayDetails();
         },
 
         prevMonth() {
             this.current.subtract(1, 'month');
             this.fetchTasks();
+            this.closeDayDetails();
         },
+
+        closeDayDetails() {
+            this.selectedDay = null;
+            this.openDetails = false;
+        },
+
         formatDate(date) {
-            return moment(date).format('Do MMMM YYYY');
+            return moment(date).format('DD MMMM YYYY');
         },
 
         showFingerSign(day) {
@@ -230,7 +246,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 
 
 body {
@@ -310,7 +326,7 @@ body {
 .table {
     table-layout: fixed;
     width: 100%;
-    background-color: #D1EFFF;
+    background-color: #0057d2;
 }
 
 .btn {
@@ -326,12 +342,21 @@ body {
     border-radius: 50%;
 }
 .other{
-    background-color: #188918;
+    background-color: #EBF8FF;
 }
+.other .day-number {
+    background-color: #EBF8FF;
+}
+.other .day-tasks {
+    background-color: #EBF8FF;
+}
+
 .footer-content{
     flex-shrink: 0;
-    padding-top: 100px;
-
+    padding-top: 150px;
+}
+.bottom-bar{
+    padding-bottom: 50px;
 }
 
 

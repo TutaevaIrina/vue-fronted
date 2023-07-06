@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, flushPromises } from '@vue/test-utils';
 import TasksView from '@/components/TasksView.vue';
 import fetchMock from 'jest-fetch-mock';
 
@@ -94,36 +94,20 @@ describe('TasksView', () => {
     expect(submitButton.exists()).toBe(true)
   });
   it('should delete a task when the delete button is clicked', async () => {
-    const task = {
-      id: 1,
-      name: 'Task 1',
-    };
-    const wrapper = shallowMount(TasksView, {
-      props: {
-        tasks: [task],
-      },
-    });
-    const deleteButton = wrapper.find('.btn btn-danger');
-    if (deleteButton.exists())
+    const wrapper = shallowMount(TasksView);
+
+    const deleteButton = wrapper.find('.btn.btn-danger');
+    if (deleteButton.exists()) {
       await deleteButton.trigger('click');
-    await wrapper.vm.$nextTick();
+    }
+
+    await flushPromises();
     expect(wrapper.vm.tasks).toHaveLength(0);
   });
 
   it('should update a task when the edit and update buttons are clicked', async () => {
-    const task = {
-      id: 1,
-      name: 'Task 1',
-    };
-
-    const wrapper = shallowMount(TasksView, {
-      props: {
-        tasks: [task],
-      },
-    });
-
+    const wrapper = shallowMount(TasksView);
     const editButton = wrapper.find('.btn btn-primary');
-
     if (editButton.exists()) {
       await editButton.trigger('click');
       const inputField = wrapper.find('input');
@@ -134,14 +118,15 @@ describe('TasksView', () => {
 
         if (updateButton.exists()) {
           await updateButton.trigger('click');
-          await wrapper.vm.$nextTick();
+
+          await flushPromises();
 
           expect(wrapper.vm.tasks[0].name).toBe('Updated Task');
         }
       }
     }
-
   });
+
   it('should save a task when the user inputs name and deadline and clicks the button', async () => {
     const wrapper = shallowMount(TasksView);
 
@@ -159,7 +144,7 @@ describe('TasksView', () => {
     if (saveButton.exists()) {
       await saveButton.trigger('click');
 
-      await wrapper.vm.$nextTick();
+      await flushPromises();
 
       expect(wrapper.vm.tasks.length).toBe(1);
       expect(wrapper.vm.tasks[0].name).toBe('New Task');
@@ -171,7 +156,7 @@ describe('TasksView', () => {
     const wrapper = shallowMount(TasksView, {
       props: { msg },
     });
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(wrapper.text()).toMatch(msg);
   });
 

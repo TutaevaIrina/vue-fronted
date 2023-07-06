@@ -60,7 +60,7 @@
                             :min="getCurrentDate()"
                         />
                     </td>
-                    <td class="column_status text-center">
+                    <td class="column_status">
                         <span v-if="task.completed" class="text-success">
                             <div class="text-completed">Completed
                             </div>
@@ -538,7 +538,6 @@ button {
     color: #188918;
     font-size: medium;
     border-radius: 40%;
-    text-align-all: center;
     padding: 5px;
 
 }
@@ -547,7 +546,6 @@ button {
     width: 105px;
     color: #D20A0A;
     border-radius: 40%;
-    text-align-all: center;
     padding: 5px;
 }
 .text-active{
@@ -555,23 +553,23 @@ button {
     width: 105px;
     color: #C35500;
     border-radius: 40%;
-    text-align-all: center;
     padding: 5px;
 }
 
 .btn.btn-primary-check:hover .circle-plus-icon,
 .btn.btn-primary-check:focus .circle-plus-icon {
-    color: #28a745;
+    color: green;
 }
 
 .footer-content{
     flex-shrink: 0;
-    padding-top: 100px;
+    padding-top: 150px;
 }
 
 .bottom-bar{
     padding-bottom: 50px;
 }
+
 
 </style>
 
