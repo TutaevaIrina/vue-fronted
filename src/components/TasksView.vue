@@ -251,13 +251,17 @@ export default {
             let name = this.nameField;
             let date = this.deadlineField;
             let errorText = "";
-            if (name === "" && date === "") {
+
+            if (name.trim() === "" && date === "") {
                 errorText = "Enter the title and the date";
-            } else if (name === "") {
+            } else if (name.trim() === "") {
                 errorText = "Enter the title";
+            } else if (/\s/.test(name)) {
+                errorText = "Title should not contain spaces";
             } else if (date === "") {
                 errorText = "Enter the date";
             }
+
             if (errorText !== "") {
                 document.querySelector(".errorText").innerHTML = errorText;
             } else {
