@@ -129,6 +129,7 @@ export default {
                     this.tasks = response.data.map((task) => ({
                         name: task.name,
                         deadline: moment(task.deadline, 'YYYY-MM-DD').toDate(),
+                        completed: task.completed // Add 'completed' property to the task object
                     }));
 
                     this.draw();
@@ -196,7 +197,7 @@ export default {
         },
 
         getEventsForDate(date) {
-            return this.events.filter(event => moment(event.deadline).isSame(date, 'day'));
+            return this.events.filter((event) => moment(event.deadline).isSame(date, 'day'));
         },
 
         openDay(day) {
@@ -211,7 +212,7 @@ export default {
         },
 
         getTasksForDate(date) {
-            return this.tasks.filter(task => moment(task.deadline).isSame(date, 'day'));
+            return this.tasks.filter((task) => moment(task.deadline).isSame(date, 'day') && !task.completed);
         },
 
         nextMonth() {
