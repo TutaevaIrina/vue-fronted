@@ -11,4 +11,4 @@ jobs:
         with:
           username: 'TutaevaIrina'
           reponame: 'vue-frontend'
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
